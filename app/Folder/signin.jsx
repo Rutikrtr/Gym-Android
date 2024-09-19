@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { useRouter } from 'expo-router'; // Use useRouter for navigation
-import DashBoard from './Dashboard.jsx';
 
 export default function SignIn() {
   const router = useRouter(); // Initialize useRouter hook
@@ -16,9 +15,9 @@ export default function SignIn() {
 
     try {
       // Make the POST request with axios
-      const response = await axios.post('http://192.168.1.8:6001/api/v1/admin/login', {
-        username: username,
-        password: password,
+      const response = await axios.post('http://192.168.152.207:6001/api/v1/admin/login', {
+        username,
+        password,
       });
 
       // Handle the response
@@ -27,8 +26,8 @@ export default function SignIn() {
         // Store the token securely using expo-secure-store
         await SecureStore.setItemAsync('token', data.token);
 
-        // Navigate to Sidebar screen
-        router.push('/Folder/Dashboard'); // Use router.push to navigate to the Sidebar
+        // Navigate to the Tab navigation screen
+        router.push('/Folder/Tabs'); // Ensure this path matches your tab navigation route
       }
     } catch (error) {
       if (error.response) {
@@ -43,8 +42,7 @@ export default function SignIn() {
 
   return (
     <View style={styles.container}>
-      <DashBoard/>
-      <Text style={styles.title}>Sign-in</Text>
+      <Text style={styles.title}>Log In</Text>
       <TextInput
         style={styles.input}
         placeholder="Username"
@@ -61,7 +59,9 @@ export default function SignIn() {
         autoCapitalize="none"
       />
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
-      <Button title="Login" onPress={handleSubmit} />
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -93,5 +93,22 @@ const styles = StyleSheet.create({
     color: 'red',
     marginBottom: 10,
     textAlign: 'center',
+    fontWeight: '400',
+  },
+  button: {
+    backgroundColor: '#2B3674',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+    width: 280,
+    alignSelf: 'center',
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

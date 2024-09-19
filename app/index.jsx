@@ -1,51 +1,31 @@
+import React, { useEffect } from 'react';
+import { View, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Button } from 'react-native';
-
-import { View, Image, StyleSheet, Pressable, Text } from 'react-native';
 
 export default function Index() {
   const router = useRouter();
+
+  useEffect(() => {
+    // Debugging statement to confirm the router object
+    console.log('Router object:', router);
+
+    // Delay navigation slightly to ensure router is ready
+    const timeout = setTimeout(() => {
+      try {
+        // Attempt to navigate to the SignIn screen
+        router.replace('/Folder/SignIn');
+      } catch (error) {
+        console.error('Navigation error:', error);
+      }
+    }, 100); // Small delay
+
+    // Cleanup timeout if component unmounts
+    return () => clearTimeout(timeout);
+  }, [router]);
+
   return (
-    <View style={styles.container}>
-      <Image
-        source={require('../assets/GymLogo.png')}
-        style={styles.logo}
-      />
-      <Button
-        title="Go to Sign In"
-        onPress={() => router.push('/Folder/signin')}
-      />
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" color="#0000ff" />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F3F7FF',
-  },
-  logo: {
-    width: 250,
-    height: 250,
-    borderRadius: 125,
-    // iOS shadow
-    shadowColor: '#616060',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
-    // Android shadow
-    elevation: 5,
-  },
-  button: {
-    backgroundColor: '#4318FF',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-  },
-});
